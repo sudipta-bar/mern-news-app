@@ -67,6 +67,77 @@ npm start
 
 Open the frontend at http://localhost:3000 (default CRA port) and the API at the backend port (see backend `.env`).
 
+### Backend starter (if missing)
+
+The repository expects a `server.js` entry script in `backend/` (see `backend/package.json`). If `backend/server.js` is not present you can create it with the following content to wire up the app and MongoDB connection:
+
+```js
+// backend/server.js
+const dotenv = require("dotenv");
+dotenv.config();
+
+const app = require("./src/app");
+const connectDB = require("./src/config/db");
+
+const PORT = process.env.PORT || 5000;
+
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  })
+  .catch((err) => {
+    console.error("Failed to start server:", err);
+    process.exit(1);
+  });
+```
+
+Save that file as `backend/server.js` and then run the backend with `npm run dev` or `npm start` as shown below.
+
+## Environment example
+
+Create a `.env` file in the `backend` folder (or copy from `.env.example`) with these values:
+
+```
+MONGO_URI=mongodb://localhost:27017/news-app
+JWT_SECRET=your_jwt_secret_here
+PORT=5000
+NODE_ENV=development
+```
+
+If you want to add an `.env.example` file to the repo, include the same keys but leave values blank or with placeholders.
+
+## Run locally (commands)
+
+Backend (from repo root):
+
+```bash
+cd backend
+# install dependencies (only once)
+npm install
+
+# create .env (or copy .env.example) and fill values
+
+# start in development (auto-reloads via nodemon)
+npm run dev
+
+# or start production
+npm start
+```
+
+Frontend (from repo root):
+
+```bash
+cd frontend
+npm install
+
+# set API URL (Create React App example)
+# in .env: REACT_APP_API_URL=http://localhost:5000/api
+
+npm start
+```
+
+Run the backend and frontend in separate terminals. The frontend will proxy requests to the API using `REACT_APP_API_URL` if configured.
+
 ## Environment Variables
 
 Create a `.env` file in the `backend` folder with values similar to:
